@@ -1,4 +1,5 @@
 ---
+<<<<<<< HEAD
 title: "RepData assesment1"
 author: "kessoku"
 date: "Monday, December 08, 2014"
@@ -84,4 +85,3 @@ plot( x=names(intSteps.per.weekend),
       y=intSteps.per.weekend, main="weekend",
       type="l", xlab="interval", ylab="steps")
 ```
-
