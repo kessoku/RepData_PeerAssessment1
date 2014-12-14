@@ -5,18 +5,83 @@ date: "Monday, December 08, 2014"
 output: html_document
 ---
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r}
-summary(cars)
+Loading and preprocessing the data
+```{r, echo=TRUE}
+data <- read.csv("./repdata-data-activity/activity.csv")
 ```
 
-You can also embed plots, for example:
+the plot of total number of steps taken each day is
+```{r, echo=TRUE}
+library(ggplot2)
+data.nonNA <- data[ which( is.na( data[,"steps"] ) == FALSE ), ]
 
-```{r, echo=FALSE}
-plot(cars)
+steps.by.date <- tapply(data.nonNA$steps, data.nonNA$date, sum)
+ggplot( data.frame(steps.by.date), aes(steps.by.date)) + geom_histogram()
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+the mean and median total number of steps taken per day are
+```{r, echo=TRUE}
+tapply(data.nonNA$steps, data.nonNA$date, mean)
+tapply(data.nonNA$steps, data.nonNA$date, median) 
+```
+
+the average daily activity pattern is 
+```{r, echo=TRUE}
+intSteps.per.date <- tapply(data.nonNA$steps, data.nonNA$interval, mean)
+plot( x=names(intSteps.per.date), y=intSteps.per.date, type="l", xlab="interval", ylab="steps")
+```
+
+the maximum number of steps is 
+```{r, echo=TRUE}
+max(intSteps.per.date)
+names( intSteps.per.date[which( intSteps.per.date==max(intSteps.per.date) )] )
+```
+
+the num. of missing values is 
+```{r, echo=TRUE}
+sum( is.na( data$steps ) == TRUE )
+```
+
+the plot of dataset with the missing data filled in is 
+```{r, echo=TRUE}
+data.imputeNA <- data
+NA.row.index <- which( is.na( data.imputeNA$steps ) == TRUE )
+data.imputeNA[ NA.row.index, 1] <- 
+  sapply( data.imputeNA[ NA.row.index, 3 ], 
+          function(x){ intSteps.per.date[ which( names(intSteps.per.date) == x ) ]  } )
+
+steps.by.date.2 <- tapply(data.imputeNA$steps, data.imputeNA$date, sum)
+ggplot( data.frame(steps.by.date.2), aes(steps.by.date.2)) + geom_histogram()
+```
+
+the mean and median total number of steps taken per day are
+```{r, echo=TRUE}
+tapply(data.imputeNA$steps, data.imputeNA$date, mean)
+tapply(data.imputeNA$steps, data.imputeNA$date, median) 
+```
+
+```{r, echo=TRUE}
+weekday.end <- 
+data.frame( sapply( weekdays( as.Date(data.imputeNA[,2])  ), 
+                    function(day){ if(day %in% c("“y—j“ú","“ú—j“ú") ){ "weekend" }
+                                   else{"weekday"} 
+                                  } ) )
+
+data.imputeNA.weekday <- data.imputeNA[which(weekday.end=="weekday"), ]
+data.imputeNA.weekend <- data.imputeNA[which(weekday.end=="weekend"), ]
+
+intSteps.per.weekday <- tapply(data.imputeNA.weekday$steps, 
+                               data.imputeNA.weekday$interval, 
+                               mean)
+intSteps.per.weekend <- tapply(data.imputeNA.weekend$steps, 
+                               data.imputeNA.weekend$interval, 
+                               mean)
+plot( x=names(intSteps.per.weekday), 
+      y=intSteps.per.weekday, main="weekday",
+      type="l", xlab="interval", ylab="steps")
+
+plot( x=names(intSteps.per.weekend), 
+      y=intSteps.per.weekend, main="weekend",
+      type="l", xlab="interval", ylab="steps")
+```
+
