@@ -61,6 +61,8 @@ tapply(data.imputeNA$steps, data.imputeNA$date, mean)
 tapply(data.imputeNA$steps, data.imputeNA$date, median) 
 ```
 
+
+Are there differences in activity patterns between weekdays and weekends?
 ```{r, echo=TRUE}
 weekday.end <- 
 data.frame( sapply( weekdays( as.Date(data.imputeNA[,2])  ), 

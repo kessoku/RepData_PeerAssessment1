@@ -379,6 +379,8 @@ ggplot( data.frame(steps.by.date.2), aes(steps.by.date.2)) + geom_histogram()
 ##      34.11
 </code></pre>
 
+<p>Are there differences in activity patterns between weekdays and weekends?</p>
+
 <pre><code class="r">weekday.end &lt;- 
 data.frame( sapply( weekdays( as.Date(data.imputeNA[,2])  ), 
                     function(day){ if(day %in% c(&quot;土曜日&quot;,&quot;日曜日&quot;) ){ &quot;weekend&quot; }

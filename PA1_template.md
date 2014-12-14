@@ -1,4 +1,5 @@
 ---
+<<<<<<< HEAD
 title: "RepData assesment1"
 author: "kessoku"
 date: "Monday, December 08, 2014"
@@ -204,6 +205,8 @@ tapply(data.imputeNA$steps, data.imputeNA$date, median)
 ```
 
 
+Are there differences in activity patterns between weekdays and weekends?
+
 ```r
 weekday.end <- 
 data.frame( sapply( weekdays( as.Date(data.imputeNA[,2])  ), 
@@ -234,4 +237,3 @@ plot( x=names(intSteps.per.weekend),
 ```
 
 ![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-92.png) 
-
